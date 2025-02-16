@@ -27,7 +27,7 @@ class DonkiRepository implements DonkiRepositoryInterface
             }, $measurement['instruments']);
         }, $response ?? []));
 
-        return array_unique($instruments);
+        return $instruments;
     }
 
     public function getActivityIdsFromMeasurement(string $measurementType, string $idFieldName): array

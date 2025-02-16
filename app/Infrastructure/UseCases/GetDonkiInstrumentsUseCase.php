@@ -22,6 +22,6 @@ class GetDonkiInstrumentsUseCase implements GetDonkiInstrumentsUseCaseInterface
             $instruments = array_merge($instruments, $instrumentsUsedInMeasurement);
         }
 
-        return ['instruments' => array_values($instruments)];
+        return ['instruments' => array_values(array_unique($instruments))];
     }
 }
