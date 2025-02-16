@@ -14,11 +14,11 @@ class GetDonkiInstrumentsUseCase implements GetDonkiInstrumentsUseCaseInterface
 
     public function execute(): array
     {
-        $measurements = ['CME', 'GST', 'IPS', 'FLR', 'SEP', 'MPC', 'RBE'];
+        $measurementsApis = ['CME', 'GST', 'IPS', 'FLR', 'SEP', 'MPC', 'RBE'];
         $instruments = [];
 
-        foreach ($measurements as $measurement) {
-            $instrumentsUsedInMeasurement = $this->donkiRepository->getInstrumentsFromMeasurement($measurement);
+        foreach ($measurementsApis as $api) {
+            $instrumentsUsedInMeasurement = $this->donkiRepository->getInstrumentsFromMeasurement($api);
             $instruments = array_merge($instruments, $instrumentsUsedInMeasurement);
         }
 

@@ -14,7 +14,7 @@ class GetDonkiActivityIdsUseCase implements GetDonkiActivityIdsUseCaseInterface
 
     public function execute(): array
     {
-        $measurements = [
+        $measurementsApis = [
             ['type' => 'CME', 'idFieldName' => 'activityID'],
             ['type' => 'GST', 'idFieldName' => 'gstID'],
             ['type' => 'IPS', 'idFieldName' => 'activityID'],
@@ -25,8 +25,8 @@ class GetDonkiActivityIdsUseCase implements GetDonkiActivityIdsUseCaseInterface
         ];
         $activityIds = [];
 
-        foreach ($measurements as $measurement) {
-            $activityIdsInMeasurement = $this->donkiRepository->getActivityIdsFromMeasurement($measurement['type'], $measurement['idFieldName']);
+        foreach ($measurementsApis as $api) {
+            $activityIdsInMeasurement = $this->donkiRepository->getActivityIdsFromMeasurement($api['type'], $api['idFieldName']);
             $activityIds = array_merge($activityIds, $activityIdsInMeasurement);
         }
 
