@@ -59,6 +59,30 @@ class DonkiRepository implements DonkiRepositoryInterface
         return array_unique(array_merge(...$activitiesIDs));
     }
 
+    public function getMeasurementsData(array $measurementApisInfo): array
+    {
+        $promises = array_map(fn($api) => $this->getDataFromDonkiAPI($api['type']), $measurementApisInfo);
+        $responses = Utils::unwrap($promises);
+
+        $measurementsData = array_map(function (Object $measurementsJson, int $index) use ($measurementApisInfo) {
+            $measurements = json_decode($measurementsJson->getBody()->getContents(), true);
+            return array_map(
+                function ($measurement) use ($index, $measurementApisInfo) {
+                    $idFieldName = $measurementApisInfo[$index]['idFieldName'];
+                    $parts = explode("-", $measurement[$idFieldName]);
+                    $id = $parts[count($parts) - 2] . "-" . $parts[count($parts) - 1];
+                    return [
+                        'id' => $id,
+                        'instruments' => array_map(fn($instrument) => $instrument['displayName'], $measurement['instruments']),
+                    ];
+                },
+                $measurements
+            );
+        }, $responses, array_keys($responses));
+
+        return array_merge(...$measurementsData);
+    }
+
     private function getDataFromDonkiAPI(string $measurement): PromiseInterface
     {
         return $this->client->requestAsync(
