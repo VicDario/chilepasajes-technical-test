@@ -5,7 +5,6 @@ namespace App\Infrastructure\Repositories;
 use App\Config\EnvPlugin;
 use App\Domain\Repositories\DonkiRepositoryInterface;
 use GuzzleHttp\ClientInterface;
-use Illuminate\Support\Facades\Log;
 
 class DonkiRepository implements DonkiRepositoryInterface
 {
@@ -29,6 +28,19 @@ class DonkiRepository implements DonkiRepositoryInterface
         }, $$response ?? []));
 
         return array_unique($instruments);
+    }
+
+    public function getActivityIdsFromMeasurement(string $measurementType, string $idFieldName): array
+    {
+        $response = $this->getDataFromDonkiAPI($measurementType);
+
+        $activitiesIDs = array_map(function ($measurement) use ($idFieldName) {
+            $parts = explode("-", $measurement[$idFieldName]);
+            $id = $parts[count($parts)-2] . "-" . $parts[count($parts)-1];
+            return $id;
+        }, $response ?? []);
+
+        return array_unique($activitiesIDs);
     }
 
     private function getDataFromDonkiAPI(string $measurement): array
