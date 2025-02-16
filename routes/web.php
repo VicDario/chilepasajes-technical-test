@@ -8,3 +8,4 @@ Route::get('/', function () {
 });
 
 Route::get('/instruments', [DonkiController::class, 'getInstrumentsFromMeasurements']);
+Route::get('/activity-ids', [DonkiController::class, 'getActivityIdsFromMeasurements']);
