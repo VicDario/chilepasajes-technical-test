@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Config\EnvPlugin;
 use App\Domain\Repositories\DonkiRepositoryInterface;
 use App\Domain\UseCases\GetDonkiActivityIdsUseCaseInterface;
+use App\Domain\UseCases\GetDonkiInstrumentsUsageUseCaseInterface;
 use App\Domain\UseCases\GetDonkiInstrumentsUseCaseInterface;
 use App\Infrastructure\Repositories\DonkiRepository;
 use App\Infrastructure\UseCases\GetDonkiActivityIdsUseCase;
+use App\Infrastructure\UseCases\GetDonkiInstrumentsUsageUseCase;
 use App\Infrastructure\UseCases\GetDonkiInstrumentsUseCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
@@ -25,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(GetDonkiInstrumentsUseCaseInterface::class, GetDonkiInstrumentsUseCase::class);
         $this->app->bind(GetDonkiActivityIdsUseCaseInterface::class, GetDonkiActivityIdsUseCase::class);
+        $this->app->bind(GetDonkiInstrumentsUsageUseCaseInterface::class, GetDonkiInstrumentsUsageUseCase::class);
+
         $this->app->bind(DonkiRepositoryInterface::class, DonkiRepository::class);
     }
 
