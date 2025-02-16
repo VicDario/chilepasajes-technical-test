@@ -25,7 +25,7 @@ class DonkiRepository implements DonkiRepositoryInterface
             return array_map(function ($instrument) {
                 return $instrument['displayName'];
             }, $measurement['instruments']);
-        }, $$response ?? []));
+        }, $response ?? []));
 
         return array_unique($instruments);
     }
