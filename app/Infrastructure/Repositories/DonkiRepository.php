@@ -16,7 +16,7 @@ class DonkiRepository implements DonkiRepositoryInterface
     public function __construct(private ClientInterface $client, private EnvPlugin $envPlugin)
     {
         $this->baseUrl = $this->envPlugin->get('NASA_API_URL');
-        $this->apiKey =  $this->envPlugin->get('DONKI_API_KEY');
+        $this->apiKey =  $this->envPlugin->get('NASA_API_KEY');
     }
 
     public function getInstrumentsFromMeasurements(array $measurementsApis): array
