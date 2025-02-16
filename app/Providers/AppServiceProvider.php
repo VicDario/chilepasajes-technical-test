@@ -18,8 +18,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(EnvPlugin::class, EnvPlugin::class);
-        $this->app->bind(ClientInterface::class, Client::class);
+        $this->app->singleton(EnvPlugin::class, EnvPlugin::class);
+        $this->app->singleton(ClientInterface::class, Client::class);
 
         $this->app->bind(GetDonkiInstrumentsUseCaseInterface::class, GetDonkiInstrumentsUseCase::class);
         $this->app->bind(DonkiRepositoryInterface::class, DonkiRepository::class);
