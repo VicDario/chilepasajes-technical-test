@@ -5,6 +5,8 @@ namespace App\Infrastructure\Repositories;
 use App\Config\EnvPlugin;
 use App\Domain\Repositories\DonkiRepositoryInterface;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Promise\Utils;
+use GuzzleHttp\Promise\PromiseInterface;
 
 class DonkiRepository implements DonkiRepositoryInterface
 {
@@ -17,15 +19,21 @@ class DonkiRepository implements DonkiRepositoryInterface
         $this->apiKey =  $this->envPlugin->get('DONKI_API_KEY');
     }
 
-    public function getInstrumentsFromMeasurement(string $measurementType): array
+    public function getInstrumentsFromMeasurements(array $measurementsApis): array
     {
-        $response = $this->getDataFromDonkiAPI($measurementType);
+        $promises = array_map(function ($api) {
+            return $this->getDataFromDonkiAPI($api);
+        }, $measurementsApis);
+        $responses = Utils::unwrap($promises);
 
-        $instruments = array_merge(...array_map(function ($measurement) {
-            return array_map(function ($instrument) {
-                return $instrument['displayName'];
-            }, $measurement['instruments']);
-        }, $response ?? []));
+        $instruments = array_merge(...array_map(function ($measurementJson) {
+            $measurement = json_decode($measurementJson->getBody()->getContents(), true);
+            return array_merge(...array_map(
+                fn($measurement) =>
+                array_map(fn($instrument) => $instrument['displayName'], $measurement['instruments']),
+                $measurement
+            ));
+        }, $responses ?? []));
 
         return $instruments;
     }
@@ -36,16 +44,16 @@ class DonkiRepository implements DonkiRepositoryInterface
 
         $activitiesIDs = array_map(function ($measurement) use ($idFieldName) {
             $parts = explode("-", $measurement[$idFieldName]);
-            $id = $parts[count($parts)-2] . "-" . $parts[count($parts)-1];
+            $id = $parts[count($parts) - 2] . "-" . $parts[count($parts) - 1];
             return $id;
         }, $response ?? []);
 
         return array_unique($activitiesIDs);
     }
 
-    private function getDataFromDonkiAPI(string $measurement): array
+    private function getDataFromDonkiAPI(string $measurement): PromiseInterface
     {
-        $response = $this->client->request(
+        return $this->client->requestAsync(
             'GET',
             $this->baseUrl . '/DONKI/' . $measurement,
             [
@@ -54,6 +62,5 @@ class DonkiRepository implements DonkiRepositoryInterface
                 ],
             ]
         );
-        return json_decode($response->getBody()->getContents(), true);
     }
 }
