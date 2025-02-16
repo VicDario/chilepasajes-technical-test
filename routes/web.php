@@ -1,10 +1,10 @@
 <?php
 
-use App\Presentation\Http\Controllers\InstrumentController;
+use App\Presentation\Http\Controllers\DonkiController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/instruments', [InstrumentController::class, 'getInstrumentsFromDonki']);
+Route::get('/instruments', [DonkiController::class, 'getInstrumentsFromMeasurements']);
