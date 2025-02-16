@@ -11,7 +11,7 @@ class GetDonkiInstrumentsUsageUseCase implements GetDonkiInstrumentsUsageUseCase
 
     public function execute(): array
     {
-        $measurementsApis = ['CME', 'GST', 'IPS', 'FLR', 'SEP', 'MPC', 'RBE'];
+        $measurementsApis = ['CME', 'IPS', 'FLR', 'SEP', 'MPC', 'RBE'];
 
         $instruments = $this->donkiRepository->getInstrumentsFromMeasurements($measurementsApis);
         $totalOccurrences = count($instruments);
