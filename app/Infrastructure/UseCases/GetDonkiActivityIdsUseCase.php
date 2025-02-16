@@ -7,10 +7,7 @@ use App\Domain\UseCases\GetDonkiActivityIdsUseCaseInterface;
 
 class GetDonkiActivityIdsUseCase implements GetDonkiActivityIdsUseCaseInterface
 {
-    public function __construct(private DonkiRepositoryInterface $donkiRepository)
-    {
-        $this->donkiRepository = $donkiRepository;
-    }
+    public function __construct(private DonkiRepositoryInterface $donkiRepository) {}
 
     public function execute(): array
     {
@@ -23,13 +20,9 @@ class GetDonkiActivityIdsUseCase implements GetDonkiActivityIdsUseCaseInterface
             ['type' => 'MPC', 'idFieldName' => 'mpcID'],
             ['type' => 'RBE', 'idFieldName' => 'rbeID']
         ];
-        $activityIds = [];
 
-        foreach ($measurementsApis as $api) {
-            $activityIdsInMeasurement = $this->donkiRepository->getActivityIdsFromMeasurement($api['type'], $api['idFieldName']);
-            $activityIds = array_merge($activityIds, $activityIdsInMeasurement);
-        }
+        $activityIdsInMeasurement = $this->donkiRepository->getActivityIdsFromMeasurements($measurementsApis);
 
-        return ['activityIDs' => array_values($activityIds)];
+        return ['activityIDs' => array_values(array_unique($activityIdsInMeasurement))];
     }
 }

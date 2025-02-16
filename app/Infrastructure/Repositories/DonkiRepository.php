@@ -38,17 +38,25 @@ class DonkiRepository implements DonkiRepositoryInterface
         return $instruments;
     }
 
-    public function getActivityIdsFromMeasurement(string $measurementType, string $idFieldName): array
+    public function getActivityIdsFromMeasurements(array $measurementApisInfo): array
     {
-        $response = $this->getDataFromDonkiAPI($measurementType);
+        $promises = array_map(fn($api) => $this->getDataFromDonkiAPI($api['type']), $measurementApisInfo);
+        $responses = Utils::unwrap($promises);
 
-        $activitiesIDs = array_map(function ($measurement) use ($idFieldName) {
-            $parts = explode("-", $measurement[$idFieldName]);
-            $id = $parts[count($parts) - 2] . "-" . $parts[count($parts) - 1];
-            return $id;
-        }, $response ?? []);
+        $activitiesIDs = array_map(function (Object $measurementsJson, int $index) use ($measurementApisInfo) {
+            $measurements = json_decode($measurementsJson->getBody()->getContents(), true);
+            return array_map(
+                function ($measurement) use ($index, $measurementApisInfo) {
+                    $idFieldName = $measurementApisInfo[$index]['idFieldName'];
+                    $parts = explode("-", $measurement[$idFieldName]);
+                    $id = $parts[count($parts) - 2] . "-" . $parts[count($parts) - 1];
+                    return $id;
+                },
+                $measurements
+            );
+        }, $responses, array_keys($responses));
 
-        return array_unique($activitiesIDs);
+        return array_unique(array_merge(...$activitiesIDs));
     }
 
     private function getDataFromDonkiAPI(string $measurement): PromiseInterface
