@@ -18,7 +18,20 @@ class DonkiRepository implements DonkiRepositoryInterface
         $this->apiKey =  $this->envPlugin->get('DONKI_API_KEY');
     }
 
-    public function getInstrumentsFromMeasurement(string $measurement): array
+    public function getInstrumentsFromMeasurement(string $measurementType): array
+    {
+        $response = $this->getDataFromDonkiAPI($measurementType);
+
+        $instruments = array_merge(...array_map(function ($measurement) {
+            return array_map(function ($instrument) {
+                return $instrument['displayName'];
+            }, $measurement['instruments']);
+        }, $$response ?? []));
+
+        return array_unique($instruments);
+    }
+
+    private function getDataFromDonkiAPI(string $measurement): array
     {
         $response = $this->client->request(
             'GET',
@@ -29,14 +42,6 @@ class DonkiRepository implements DonkiRepositoryInterface
                 ],
             ]
         );
-        $measurement = json_decode($response->getBody()->getContents(), true);
-
-        $instruments = array_merge(...array_map(function ($measurement) {
-            return array_map(function ($instrument) {
-                return $instrument['displayName'];
-            }, $measurement['instruments']);
-        }, $measurement ?? []));
-
-        return array_unique($instruments);
+        return json_decode($response->getBody()->getContents(), true);
     }
 }
