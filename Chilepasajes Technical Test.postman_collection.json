@@ -1,0 +1,208 @@
+{
+	"info": {
+		"_postman_id": "681e7d1e-8058-41de-a99c-52490af382e2",
+		"name": "Chilepasajes Technical Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17163718"
+	},
+	"item": [
+		{
+			"name": "I. Instruments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let instruments = pm.response.json().instruments;\r",
+							"\r",
+							"pm.test('\"instruments\" must be an array', () => {\r",
+							"    pm.expect(instruments).to.exist;\r",
+							"    pm.expect(instruments).to.be.an('array');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/instruments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"instruments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "II. Activity IDs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let activityIDs = pm.response.json().activityIDs;\r",
+							"\r",
+							"pm.test('\"activityIDs\" must be an array', () => {\r",
+							"    pm.expect(activityIDs).to.exist;\r",
+							"    pm.expect(activityIDs).to.be.an('array');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/activity-ids",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"activity-ids"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "III. Instruments Percentaje Usage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let instrumentsUse = pm.response.json().instruments_use;\r",
+							"\r",
+							"pm.test('\"instruments_use\" must be an object', () => {\r",
+							"    pm.expect(instrumentsUse).to.exist;\r",
+							"    pm.expect(instrumentsUse).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test('Each property of \"instruments_use\" must be a number', () => {\r",
+							"    for (let key in instrumentsUse)\r",
+							"        pm.expect(instrumentsUse[key]).to.be.a('number');\r",
+							"});\r",
+							"\r",
+							"pm.test('Sum of all instrument usage values equals 1', () => {\r",
+							"    let sum = 0;\r",
+							"    for (let key in instrumentsUse) {\r",
+							"        sum += instrumentsUse[key];\r",
+							"    }\r",
+							"    pm.expect(sum).to.be.closeTo(1, 0.001);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/instruments/percentage-usage",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"instruments",
+						"percentage-usage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "IV. Instrument Percentaje Usage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let instrumentActivity = pm.response.json().instrument_activity;\r",
+							"\r",
+							"pm.test('\"instrument_activity\" must be an object', () => {\r",
+							"    pm.expect(instrumentActivity).to.exist;\r",
+							"    pm.expect(instrumentActivity).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"instrument\": \"GOES-P: EXIS 1.0-8.0\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/instruments/percentage-usage",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"instruments",
+						"percentage-usage"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
