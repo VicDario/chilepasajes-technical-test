@@ -14,7 +14,7 @@ class GetDonkiInstrumentsUseCase implements GetDonkiInstrumentsUseCaseInterface
 
     public function execute(): array
     {
-        $measurements = ['CME', 'IPS', 'FLR', 'SEP', 'MPC', 'RBE'];
+        $measurements = ['CME', 'GST', 'IPS', 'FLR', 'SEP', 'MPC', 'RBE'];
         $instruments = [];
 
         foreach ($measurements as $measurement) {
