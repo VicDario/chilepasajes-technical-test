@@ -1,0 +1,27 @@
+# ChilePasajes Desafio Técnico
+
+## Técnologias Usadas
+
+- PHP 8.4
+- Laravel 11.31
+- GuzzleHttp - HttpClient
+
+## Inicialización
+
+1. Instalar dependencias, ejecutar en la terminal:
+```bash
+composer install
+```
+2. Clonar el archivo .env.example
+```bash
+cp .env.example .env
+```
+3. Introducir la `API KEY` de la `API NASA` en el archivo `.env` en el parametro `NASA_API_KEY`
+
+4. Ejecutar el servidor
+```bash
+php artisan serve
+```
+
+## Colección de Consultas
+En el root del proyecto se encuentra un archivo de `Postman` con nombre `Chilepasajes Technical Test.postman_collection` que contiene las consultas disponibles en la API para su rapido uso. Debe importarse dentro de Postman
